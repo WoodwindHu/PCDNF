@@ -90,7 +90,7 @@ class PointcloudPatchDataset(data.Dataset):
             self.shape_names = [x.strip() for x in self.shape_names]
             self.shape_names = list(filter(None, self.shape_names))
             for shape_ind, shape_name in enumerate(self.shape_names):
-                print('getting information for shape %s' % shape_name)
+                # print('getting information for shape %s' % shape_name)
                 if shape_ind % 6 == 0:
                     gt_pts_normal = np.load(os.path.join(self.root, shape_name + '.npy'))
                     gt_pts = gt_pts_normal[:, 0:3]
@@ -151,7 +151,7 @@ class PointcloudPatchDataset(data.Dataset):
             #索引中包含中心点
             dist,noise_patch_idx=np.array(noise_shape['noise_kdtree'].query(noise_shape['noise_pts'][patch_ind],self.points_per_patch))
             # patch_radius=dist[-1]
-            noise_patch_idx=noise_patch_idx.astype(np.int)
+            noise_patch_idx=noise_patch_idx.astype(np.int32)
             # print(noise_patch_idx)
         else:
             #索引中不包含中心点
@@ -191,7 +191,7 @@ class PointcloudPatchDataset(data.Dataset):
         if self.knn:
         # gt_patch_idx = gt_shape['gt_kdtree'].query_ball_point(noise_shape['noise_pts'][patch_ind], patch_radius)
             dist,gt_patch_idx=gt_shape['gt_kdtree'].query(noise_shape['noise_pts'][patch_ind],self.points_per_patch)
-            gt_patch_idx=gt_patch_idx.astype(np.int)
+            gt_patch_idx=gt_patch_idx.astype(np.int32)
         else:
             gt_patch_idx=np.array(gt_shape['gt_kdtree'].query_ball_point(noise_shape['noise_pts'][patch_ind],patch_radius))
         # print(gt_patch_idx)

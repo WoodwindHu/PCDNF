@@ -52,6 +52,7 @@ def parse_arguments():
     # evaluation parameters
     parser.add_argument('--eval_dir', type=str, default='./Models/all/test1', help='')
     parser.add_argument('--eval_iter_nums', type=int, default=3, help='')
+    parser.add_argument('--model_filename', type=str, default='Models/model_full_ae_3.pth', help='')
 
     return parser.parse_args()
 

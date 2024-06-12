@@ -1,0 +1,2 @@
+time PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python  python train_NetworkN1.py --name pcdnf --trainset /data/hqj/MPEG/data/MPEG_PCDNF/train --model_interval 1
+time PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION=python  python testN.py --name pcdnf --test /data/hqj/MPEG/data/MPEG_PCDNF/test/MPEG_30000_poisson_0.006 --model_interval 1 --save_dir results/MPEG_PCDNF_30000_poisson_0.006/ --model_filename Models/model_full_ae_3.pth

@@ -6,7 +6,7 @@ from NetworkN1 import PCPNet
 from dataset923 import PointcloudPatchDataset,my_collate
 from utils118 import parse_arguments
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "3"
 def eval(opt):
 
 
@@ -15,8 +15,8 @@ def eval(opt):
     shape_names = [x.strip() for x in shape_names]
     shape_names = list(filter(None, shape_names))
 
-    if not os.path.exists(parameters.save_dir):
-        os.makedirs(parameters.save_dir)
+    if not os.path.exists(opt.save_dir):
+        os.makedirs(opt.save_dir)
     for shape_id, shape_name in enumerate(shape_names):
         print(shape_name)
         original_noise_pts = np.load(os.path.join(opt.testset, shape_name + '.npy'))
@@ -36,7 +36,7 @@ def eval(opt):
                 num_workers=int(opt.workers))
 
             pointfilter_eval = PCPNet()
-            model_filename = os.path.join(parameters.eval_dir, 'model_full_ae.pth')
+            model_filename = opt.model_filename
             checkpoint = torch.load(model_filename)
             pointfilter_eval.load_state_dict(checkpoint['state_dict'])
 
@@ -45,7 +45,7 @@ def eval(opt):
 
             patch_radius = test_dataset.patch_radius_absolute
             pred_pts = np.empty((0, 6), dtype='float32')
-            # start = time.time()/
+            start = time.time()
             for batch_ind, data_tuple in enumerate(test_dataloader):
                 #normal [64,3]
                 noise_patch, noise_inv, noise_point,patch_normal,index,normals= data_tuple
@@ -87,19 +87,19 @@ def eval(opt):
                     pred_pts.astype('float32'))
             np.save(os.path.join(opt.save_dir, shape_name + '_pred_iter_' + str(eval_index + 1) + '.npy'),
                     pred_pts.astype('float32'))
-            # np.savetxt(os.path.join(opt.save_dir, shape_name + '.txt'),
-            #         pred_pts.astype('float32'), fmt='%.6f')
+            np.savetxt(os.path.join(opt.save_dir, shape_name + '.xyz'),
+                    pred_pts[:,:3].astype('float32'), fmt='%.6f')
 
 
 
 if __name__ == '__main__':
 
     parameters = parse_arguments()
-    parameters.testset = r'testdir'
+    # parameters.testset = r'testdir'
     parameters.eval_dir = './Trained_Models/'
     parameters.batchSize = 64
     parameters.eval_iter_nums =1
     parameters.workers = 4
-    parameters.save_dir = r'savedir'
+    # parameters.save_dir = r'savedir'
     parameters.patch_radius = 0.05
     eval(parameters)

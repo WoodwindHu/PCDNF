@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 from tensorboardX import SummaryWriter
-from NetworkNN import PCPNet
+from NetworkN1 import PCPNet
 from dataset923 import PointcloudPatchDataset, RandomPointcloudPatchSampler, my_collate
 from utils118  import parse_arguments, adjust_learning_rate,compute_bilateral_loss
 
@@ -12,7 +12,7 @@ import torch.utils.data
 import torch.optim as optim
 import torch.backends.cudnn as cudnn
 torch.backends.cudnn.benchmark = True
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 def train(opt):
     print(opt)
     if not os.path.exists(opt.summary_train):
@@ -92,7 +92,7 @@ def train(opt):
             loss.backward()
             optimizer.step()
 
-            print('[%d: %d/%d] train loss: %f\n' % (epoch, batch_ind, num_batch, loss.item()))
+            print('[%d: %d/%d] train loss: %f' % (epoch, batch_ind, num_batch, loss.item()))
             train_writer.add_scalar('loss', loss.data.item(), epoch * num_batch + batch_ind)
 
             train_writer.add_scalar('loss1', loss1.data.item(), epoch * num_batch + batch_ind)
@@ -113,7 +113,6 @@ def train(opt):
 
 if __name__ == '__main__':
     parameters = parse_arguments()
-    parameters.trainset = './trainset'
     parameters.summary_train = './log'
     parameters.network_model_dir = './Models/'
     parameters.batchSize = 128
